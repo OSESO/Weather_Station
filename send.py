@@ -4,7 +4,8 @@
 # 
 import os
 import sys
-
+#cURL指令的库包
+import requests
 from typing import List
 
 from alibabacloud_dysmsapi20170525.client import Client as Dysmsapi20170525Client
@@ -14,18 +15,19 @@ from alibabacloud_tea_util import models as util_models
 from alibabacloud_tea_util.client import Client as UtilClient
 
 import json
-with open('./web_data/weather.json', 'r', encoding='utf-8') as weather:
-    weather_data = json.load(weather)
-with open('./web_data/context.json', 'r', encoding='utf-8') as context:
-    day_context = json.load(context)
 with open('./user.json', 'r', encoding='utf-8') as user_info:
     user = json.load(user_info)
 
+url_api_weather = 'https://devapi.qweather.com/v7/weather/3d?location='
+city = user['user'][0]['location']
+key = user['weather_key']
+url = url_api_weather + city + '&&key=' +key 
+weather_data = requests.get(url).json()
 
 daily_weather1 = weather_data['daily'][0]
 daily_weather2 = weather_data['daily'][1]
 daily_weather3 = weather_data['daily'][2]
-context = day_context['hitokoto']
+
 template_param = {
     "day1_text": daily_weather1["textDay"],
     "day1_max": daily_weather1["tempMax"],
@@ -36,8 +38,8 @@ template_param = {
     "day3_text": daily_weather3["textDay"],
     "day3_max": daily_weather3["tempMax"],
     "day3_min": daily_weather3["tempMin"],
-    "poetry": context
 }
+print(template_param)
 class Sample:
     def __init__(self):
         pass
