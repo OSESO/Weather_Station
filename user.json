@@ -1,9 +1,10 @@
 {
     "sign_name": "天气",
     "template_code": "template_code",
+    "weather_key" : "hefeng_weather_key",
     "user": [
         {
-            "location": "city",
+            "location": "location_code",
             "name": "name",
             "phone_number": "phone_number"
         }
