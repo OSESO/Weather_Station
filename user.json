@@ -1,0 +1,10 @@
+{
+    "sign_name": "天气",
+    "template_code": "template_code",
+    "user": [
+        {
+            "name": "name",
+            "phone_number": "phone_number"
+        }
+    ]
+}
