@@ -3,6 +3,7 @@
     "template_code": "template_code",
     "user": [
         {
+            "location": "city",
             "name": "name",
             "phone_number": "phone_number"
         }
