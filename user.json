@@ -1,12 +1,17 @@
 {
-    "sign_name": "天气",
+    "sign_name": "sign_name",
     "template_code": "template_code",
-    "weather_key" : "hefeng_weather_key",
+    "weather_key" : "weather_key",
     "user": [
         {
-            "location": "location_code",
-            "name": "name",
-            "phone_number": "phone_number"
+            "location": "user1_location",
+            "name": "user1_name",
+            "phone_number": "user1_phone_num"
+        },
+        {
+            "location":"user2_location",
+            "name":"user2_name",
+            "phone_number": "user2_phone_num"
         }
     ]
 }

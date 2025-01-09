@@ -19,27 +19,7 @@ with open('./user.json', 'r', encoding='utf-8') as user_info:
     user = json.load(user_info)
 
 url_api_weather = 'https://devapi.qweather.com/v7/weather/3d?location='
-city = user['user'][0]['location']
-key = user['weather_key']
-url = url_api_weather + city + '&&key=' +key 
-weather_data = requests.get(url).json()
 
-daily_weather1 = weather_data['daily'][0]
-daily_weather2 = weather_data['daily'][1]
-daily_weather3 = weather_data['daily'][2]
-
-template_param = {
-    "day1_text": daily_weather1["textDay"],
-    "day1_max": daily_weather1["tempMax"],
-    "day1_min": daily_weather1["tempMin"],
-    "day2_text": daily_weather2["textDay"],
-    "day2_max": daily_weather2["tempMax"],
-    "day2_min": daily_weather2["tempMin"],
-    "day3_text": daily_weather3["textDay"],
-    "day3_max": daily_weather3["tempMax"],
-    "day3_min": daily_weather3["tempMin"],
-}
-print(template_param)
 class Sample:
     def __init__(self):
         pass
@@ -63,19 +43,34 @@ class Sample:
         config.endpoint = f'dysmsapi.aliyuncs.com'
         return Dysmsapi20170525Client(config)
 
-    @staticmethod
-    def main(
-        args: List[str],
-    ) -> None:
+    def send_weather_sms(user_info):
+        url = url_api_weather + user_info["location"] + "&&key=" + user["weather_key"] 
+        weather_data = requests.get(url).json()
+        daily_weather1 = weather_data['daily'][0]
+        daily_weather2 = weather_data['daily'][1]
+        daily_weather3 = weather_data['daily'][2]
+
+        template_param = {
+            "day1_text": daily_weather1["textDay"],
+            "day1_max": daily_weather1["tempMax"],
+            "day1_min": daily_weather1["tempMin"],
+            "day2_text": daily_weather2["textDay"],
+            "day2_max": daily_weather2["tempMax"],
+            "day2_min": daily_weather2["tempMin"],
+            "day3_text": daily_weather3["textDay"],
+            "day3_max": daily_weather3["tempMax"],
+            "day3_min": daily_weather3["tempMin"],
+        }
+        
         client = Sample.create_client()
         send_sms_request = dysmsapi_20170525_models.SendSmsRequest(
-            phone_numbers=user["user"][0]["phone_number"],
+            phone_numbers=user_info["phone_number"],
             sign_name=user["sign_name"],
             template_code=user["template_code"],
             template_param=json.dumps(template_param)
-            # template_param='{"day1_text":"1234","day1_min":"1234","day1_max":"1234","day2_text":"1234","day2_min":"1234","day2_max":"1234","day3_text":"1234","day3_min":"1234","day3_max":"1234","poetry":"1234"}'
         )
         runtime = util_models.RuntimeOptions()
+
         try:
             # 复制代码运行请自行打印 API 的返回值
             print(client.send_sms_with_options(send_sms_request, runtime))
@@ -88,28 +83,9 @@ class Sample:
             UtilClient.assert_as_string(error.message)
 
     @staticmethod
-    async def main_async(
-        args: List[str],
-    ) -> None:
-        client = Sample.create_client()
-        send_sms_request = dysmsapi_20170525_models.SendSmsRequest(
-            phone_numbers=user["user"][0]["phone_number"],
-            sign_name=user["sign_name"],
-            template_code=user["template_code"],
-            template_param=json.dumps(template_param)
-            # template_param='{"day1_text":"1234","day1_min":"1234","day1_max":"1234","day2_text":"1234","day2_min":"1234","day2_max":"1234","day3_text":"1234","day3_min":"1234","day3_max":"1234","poetry":"1234"}'
-        )
-        runtime = util_models.RuntimeOptions()
-        try:
-            # 复制代码运行请自行打印 API 的返回值
-            await client.send_sms_with_options_async(send_sms_request, runtime)
-        except Exception as error:
-            # 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
-            # 错误 message
-            print(error.message)
-            # 诊断地址
-            print(error.data.get("Recommend"))
-            UtilClient.assert_as_string(error.message)
+    def main(args: List[str],) -> None:
+        for user_info in user["user"]:
+            Sample.send_weather_sms(user_info)
 
 
 if __name__ == '__main__':
