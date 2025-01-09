@@ -60,6 +60,8 @@ class Sample:
             "day3_text": daily_weather3["textDay"],
             "day3_max": daily_weather3["tempMax"],
             "day3_min": daily_weather3["tempMin"],
+        }
+        
         client = Sample.create_client()
         send_sms_request = dysmsapi_20170525_models.SendSmsRequest(
             phone_numbers=user_info["phone_number"],
@@ -68,6 +70,7 @@ class Sample:
             template_param=json.dumps(template_param)
         )
         runtime = util_models.RuntimeOptions()
+
         try:
             # 复制代码运行请自行打印 API 的返回值
             print(client.send_sms_with_options(send_sms_request, runtime))
